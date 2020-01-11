@@ -1,22 +1,53 @@
 import React, {
   useState,
+  useEffect,
   FunctionComponent as FC,
   FormEvent,
   ChangeEvent
 } from "react";
-import { Counter } from "./Counter";
+
+interface User {
+  avatar_url: string;
+  html_url: string;
+  name: string;
+  repos: string;
+  public_repos: number;
+}
 
 const App: FC = () => {
-  const [count, setCount] = useState<string>("");
   const [title, setTitle] = useState<string>("");
-  const [values, setValues] = useState<{ title: string; count: string }>({
-    title: "",
-    count: ""
-  });
+  const [username, setUsername] = useState<string>("");
+  const [user, setUser] = useState<User>();
+
+  useEffect(() => {
+    const getUser = async (user: string) => {
+      try {
+        const res = await fetch(`https://api.github.com/users/${user}`);
+        const data = await res.json();
+        console.log(data);
+      } catch (err) {
+        alert(err);
+      }
+    };
+
+    const getUserRepos = async (user: string) => {
+      try {
+        const res = await fetch(`https://api.github.com/users/ralmayer/repos`);
+        const data = await res.json();
+        setUser(data);
+        console.log(data);
+      } catch (err) {
+        alert(err);
+      }
+    };
+
+    username && getUser(username);
+    username && getUserRepos(username);
+  }, [username]);
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setValues({ title, count });
+    setUsername(title);
   };
 
   const handleTitleChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -24,38 +55,23 @@ const App: FC = () => {
     setTitle(event.target.value);
   };
 
-  const handleCountChange = (event: ChangeEvent<HTMLInputElement>) => {
-    event.preventDefault();
-    setCount(event.target.value);
-  };
-
   return (
     <div className="flex w-full h-screen justify-center items-center bg-gray-200">
       <div className="container w-auto h-auto flex-initial bg-gray-500">
         <form onSubmit={handleSubmit}>
           <p className="inline-block text-gray-700 text-center bg-gray-400 px-4 py-2 m-2 shadow-lg">
-            Enter Title:{" "}
+            Enter Username:{" "}
           </p>
           <input
             className="inline-block text-gray-700 text-center bg-gray-400 px-4 py-2 m-2 shadow-lg"
             value={title}
             onChange={handleTitleChange}
           />
-          <p className="inline-block text-gray-700 text-center bg-gray-400 px-4 py-2 m-2 shadow-lg">
-            Enter Count:{" "}
-          </p>
-          <input
-            className="inline-block text-gray-700 text-center bg-gray-400 px-4 py-2 m-2 shadow-lg"
-            value={count}
-            onChange={handleCountChange}
-          />
-          <br />
           <button className="inline-block text-gray-700 text-center bg-gray-400 px-4 py-2 m-2">
             {" "}
             SUBMIT{" "}
           </button>
         </form>
-        <Counter title={values.title} count={values.count} />
       </div>
     </div>
   );
