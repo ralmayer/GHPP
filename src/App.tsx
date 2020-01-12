@@ -5,26 +5,40 @@ import React, {
   FormEvent,
   ChangeEvent
 } from "react";
+import { User } from "./User";
 
-interface User {
+interface UserInterface {
   avatar_url: string;
   html_url: string;
   name: string;
-  repos: string;
+  repos_url: string;
   public_repos: number;
 }
 
 const App: FC = () => {
-  const [title, setTitle] = useState<string>("");
+  const [title, setTitle] = useState<string>("Type here...");
   const [username, setUsername] = useState<string>("");
-  const [user, setUser] = useState<User>();
+  const [user, setUser] = useState<UserInterface>({
+    avatar_url: "https://avatars2.githubusercontent.com/u/48362631?v=4",
+    html_url: "https://github.com/ralmayer",
+    name: "Leon (Ral) Mayer",
+    repos_url: "https://api.github.com/users/ralmayer/repos",
+    public_repos: 18
+  });
 
   useEffect(() => {
     const getUser = async (user: string) => {
       try {
         const res = await fetch(`https://api.github.com/users/${user}`);
         const data = await res.json();
-        console.log(data);
+        const { avatar_url, html_url, name, repos_url, public_repos } = data
+        setUser({
+          avatar_url,
+          html_url,
+          name,
+          repos_url,
+          public_repos
+        });
       } catch (err) {
         alert(err);
       }
@@ -34,7 +48,6 @@ const App: FC = () => {
       try {
         const res = await fetch(`https://api.github.com/users/ralmayer/repos`);
         const data = await res.json();
-        setUser(data);
         console.log(data);
       } catch (err) {
         alert(err);
@@ -50,14 +63,15 @@ const App: FC = () => {
     setUsername(title);
   };
 
-  const handleTitleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    event.preventDefault();
+  const handleInputClick = () =>
+    setTitle("");
+
+  const handleTitleChange = (event: ChangeEvent<HTMLInputElement>) =>
     setTitle(event.target.value);
-  };
 
   return (
-    <div className="flex w-full h-screen justify-center items-center bg-gray-200">
-      <div className="container w-auto h-auto flex-initial bg-gray-500">
+    <div className="flex w-full h-screen justify-center items-start bg-gray-200">
+      <div className="container w-auto h-auto bg-gray-500">
         <form onSubmit={handleSubmit}>
           <p className="inline-block text-gray-700 text-center bg-gray-400 px-4 py-2 m-2 shadow-lg">
             Enter Username:{" "}
@@ -65,6 +79,7 @@ const App: FC = () => {
           <input
             className="inline-block text-gray-700 text-center bg-gray-400 px-4 py-2 m-2 shadow-lg"
             value={title}
+            onClick={handleInputClick}
             onChange={handleTitleChange}
           />
           <button className="inline-block text-gray-700 text-center bg-gray-400 px-4 py-2 m-2">
@@ -72,6 +87,7 @@ const App: FC = () => {
             SUBMIT{" "}
           </button>
         </form>
+        <User user={user}/>
       </div>
     </div>
   );
