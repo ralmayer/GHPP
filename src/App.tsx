@@ -6,6 +6,7 @@ import React, {
   ChangeEvent
 } from "react";
 import { User } from "./User";
+import { Repos } from "./Repos";
 
 interface UserInterface {
   avatar_url: string;
@@ -13,6 +14,14 @@ interface UserInterface {
   name: string;
   repos_url: string;
   public_repos: number;
+}
+
+interface Repo {
+  id: string,
+  name: string,
+  html_url: string,
+  created_at: string, 
+  language: string,
 }
 
 const App: FC = () => {
@@ -25,6 +34,13 @@ const App: FC = () => {
     repos_url: "https://api.github.com/users/ralmayer/repos",
     public_repos: 18
   });
+  const [repos, setRepos] = useState<Repo[]>([{
+    id: "",
+    name: "",
+    html_url: "",
+    created_at: "", 
+    language: "",
+  }])
 
   useEffect(() => {
     const getUser = async (user: string) => {
@@ -48,7 +64,7 @@ const App: FC = () => {
       try {
         const res = await fetch(`https://api.github.com/users/ralmayer/repos`);
         const data = await res.json();
-        console.log(data);
+        setRepos(data)
       } catch (err) {
         alert(err);
       }
@@ -71,7 +87,7 @@ const App: FC = () => {
 
   return (
     <div className="flex w-full h-screen justify-center items-start bg-gray-200">
-      <div className="container w-auto h-auto bg-gray-500">
+      <div className="container w-3/12 h-auto bg-gray-500">
         <form onSubmit={handleSubmit}>
           <p className="inline-block text-gray-700 text-center bg-gray-400 px-4 py-2 m-2 shadow-lg">
             Enter Username:{" "}
@@ -88,6 +104,7 @@ const App: FC = () => {
           </button>
         </form>
         <User user={user}/>
+        {repos[0].id !== "" && <Repos repos={repos}/>}
       </div>
     </div>
   );

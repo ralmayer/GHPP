@@ -12,7 +12,7 @@ interface UserProps {
 
 export const User: FC<UserProps> = ({ user }) => (
   <>
-    <div className="flex flex-grow-0 w-auto h-auto flex-initial bg-gray-100">
+    <div className="flex flex-grow-0 w-full h-auto bg-gray-100">
       <div className="flex flex-no-wrap w-full bg-red-500 justify-center">
         <div className="w-6/12 m-2 bg-gray-100 text-center">
           <img
