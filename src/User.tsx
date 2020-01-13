@@ -22,8 +22,12 @@ export const User: FC<UserProps> = ({ user }) => (
           />
         </div>
         <div className="flex flex-wrap w-6/12 p-2 m-2 bg-gray-100 items-center justify-center">
-            <a href={user.html_url} className="bg-gray-300 text-center p-5">{user.name}</a>
-            <a href={user.repos_url} className=" bg-gray-300 text-center p-5">Repos: {user.public_repos}</a>
+          <a href={user.html_url} className="bg-gray-300 text-center p-5">
+            {user.name}
+          </a>
+          <a href={user.repos_url} className=" bg-gray-300 text-center p-5">
+            Repos: {user.public_repos}
+          </a>
         </div>
       </div>
     </div>

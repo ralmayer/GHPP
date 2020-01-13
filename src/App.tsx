@@ -28,10 +28,10 @@ const App: FC = () => {
   const [title, setTitle] = useState<string>("Type here...");
   const [username, setUsername] = useState<string>("");
   const [user, setUser] = useState<UserInterface>({
-    avatar_url: "https://avatars2.githubusercontent.com/u/48362631?v=4",
-    html_url: "https://github.com/ralmayer",
-    name: "Leon (Ral) Mayer",
-    repos_url: "https://api.github.com/users/ralmayer/repos",
+    avatar_url: "",
+    html_url: "",
+    name: "",
+    repos_url: "",
     public_repos: 18
   });
   const [repos, setRepos] = useState<Repo[]>([{
@@ -103,7 +103,7 @@ const App: FC = () => {
             SUBMIT{" "}
           </button>
         </form>
-        <User user={user}/>
+        {user.name !== "" && <User user={user}/>}
         {repos[0].id !== "" && <Repos repos={repos}/>}
       </div>
     </div>
